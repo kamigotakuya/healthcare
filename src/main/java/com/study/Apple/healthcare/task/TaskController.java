@@ -1,7 +1,6 @@
-package com.study.xxaxxx.healthcare.task;
+package com.study.Apple.healthcare.task;
 
-
-import com.study.xxaxxx.healthcare.user.LoginService;
+import com.study.Apple.healthcare.user.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * タスク管理機能を表す。
  *
- * <p>本機能は、タスク管理に関わるCRUDを実現します。
+ * <p>
+ * 本機能は、タスク管理に関わるCRUDを実現します。
  *
- * <p>入力チェックを実施し、正しいデータ項目のみ処理します。
+ * <p>
+ * 入力チェックを実施し、正しいデータ項目のみ処理します。
  * クライアント側でも入力チェックを実施することを推奨します。
  *
  * @author 情報太郎
@@ -34,7 +35,8 @@ public class TaskController {
   /**
    * ログイン中のユーザに紐づく、タスク一覧画面を表示します。
    *
-   * <p>本機能は、タスク管理機能の一覧機能を提供します。
+   * <p>
+   * 本機能は、タスク管理機能の一覧機能を提供します。
    *
    * @param model Viewに値を渡すオブジェクト(null不可)
    * @return タスク一覧画面へのパス(null不可)
@@ -42,7 +44,8 @@ public class TaskController {
   @GetMapping("/task")
   public String getTaskList(Model model) {
     // ログインチェック
-    if (!loginService.isLogin()) return "login";
+    if (!loginService.isLogin())
+      return "login";
 
     TaskEntity taskEntity = taskService.selectAll(loginService.getLoginUserId());
     model.addAttribute("taskEntity", taskEntity);
@@ -53,7 +56,8 @@ public class TaskController {
   /**
    * 入力されたタスクをDBへ登録します。
    *
-   * <p>本機能は、タスク管理機能の登録機能を提供します。
+   * <p>
+   * 本機能は、タスク管理機能の登録機能を提供します。
    *
    * @param title タスク内容の文字列を格納(null不可)
    * @param limit 期限日の文字列を格納(null不可)
@@ -62,10 +66,9 @@ public class TaskController {
    */
   @PostMapping("/task/insert")
   public String insertTask(
-    @RequestParam(name = "title") String title,
-    @RequestParam(name = "limit") String limit,
-    Model model
-  ) {
+      @RequestParam(name = "title") String title,
+      @RequestParam(name = "limit") String limit,
+      Model model) {
     // 入力チェック
     boolean isValid = taskService.validate(title, limit);
     if (!isValid) {
@@ -87,9 +90,10 @@ public class TaskController {
   /**
    * 指定されたタスクIDをDBから削除します。
    *
-   * <p>本機能は、タスク管理機能の削除機能を提供します。
+   * <p>
+   * 本機能は、タスク管理機能の削除機能を提供します。
    *
-   * @param id タスクIDの文字列を格納(null不可)
+   * @param id    タスクIDの文字列を格納(null不可)
    * @param model Viewに値を渡すオブジェクト(null不可)
    * @return タスク一覧画面へのパス(null不可)
    */
@@ -112,9 +116,10 @@ public class TaskController {
   /**
    * 指定されたタスクIDの状態を完了に変更します。
    *
-   * <p>本機能は、タスク管理機能の状態変更機能を提供します。
+   * <p>
+   * 本機能は、タスク管理機能の状態変更機能を提供します。
    *
-   * @param id タスクIDの文字列を格納(null不可)
+   * @param id    タスクIDの文字列を格納(null不可)
    * @param model Viewに値を渡すオブジェクト(null不可)
    * @return タスク一覧画面へのパス(null不可)
    */

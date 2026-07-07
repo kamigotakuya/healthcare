@@ -1,11 +1,13 @@
-package com.study.xxaxxx.healthcare.task;
+package com.study.Apple.healthcare.task;
 
 import java.util.Date;
 
 /**
  * 1件分のタスク情報です。
  *
- * <p>各データ構造については、データベース定義をご覧ください。
+ * <p>
+ * 各データ構造については、データベース定義をご覧ください。
+ *
  * @author 情報太郎
  */
 public class TaskData {

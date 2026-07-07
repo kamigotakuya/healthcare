@@ -1,4 +1,4 @@
-package com.study.xxaxxx.healthcare.task;
+package com.study.Apple.healthcare.task;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -108,6 +108,7 @@ public class TaskService {
     }
     return true;
   }
+
   boolean validate(String comment, String limitday) {
     // nullチェック、必須チェック、50文字超過チェック
     if (comment == null || comment.isBlank() || comment.length() > 50) {
@@ -140,7 +141,6 @@ public class TaskService {
     }
     return true;
   }
-
 
   private TaskData refillToData(String userId, String title, String limitDay) {
     TaskData taskData = new TaskData();
