@@ -20,8 +20,7 @@ public class UserEntity {
   /** エラーメッセージ(表示用) */
   private String errorMessage;
 
-  public UserEntity() {
-  }
+  public UserEntity() {}
 
   public UserEntity(List<UserData> userlist, String errorMessage) {
     this.userlist = userlist;

@@ -19,8 +19,7 @@ import org.springframework.stereotype.Repository;
  * <li>削除</li>
  * <li>更新</li>
  * </ul>
- * <p>
- * 処理が継続できない場合は、呼び出し元へ例外をスローします。<br>
+ * <p>処理が継続できない場合は、呼び出し元へ例外をスローします。<br>
  * <strong>呼び出し元では適切な例外処理を行ってください。</strong>
  *
  * @author 情報太郎
@@ -29,7 +28,8 @@ import org.springframework.stereotype.Repository;
 public class UserRepository {
 
   /** SQL ログインチェック */
-  private static final String SQL_LOGIN = "SELECT * FROM user_m WHERE user_id = :userId AND password = :password AND enabled = true";
+  private static final String SQL_LOGIN =
+    "SELECT * FROM user_m WHERE user_id = :userId AND password = :password AND enabled = true";
 
   @Autowired
   private NamedParameterJdbcTemplate jdbc;
@@ -37,8 +37,7 @@ public class UserRepository {
   /**
    * 指定されたユーザーIDとパスワードにマッチするユーザーデータを取得するメソッドです。
    * ユーザーIDとパスワードは引数として受け取ります。
-   * 
-   * @param userId   取得するユーザーデータのユーザーID
+   * @param userId 取得するユーザーデータのユーザーID
    * @param password 取得するユーザーデータのパスワード
    * @return 指定されたユーザーIDのユーザーデータのリスト
    */

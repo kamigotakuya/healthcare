@@ -3,6 +3,10 @@ DELETE FROM user_m;
 
 DELETE FROM task_t;
 
+DELETE FROM exercise_t;
+
+DELETE FROM user_setting_t;
+
 /* ユーザマスタのデータ（ADMIN権限） */
 INSERT INTO
   user_m (user_id, PASSWORD, user_name, ROLE, enabled)
@@ -77,3 +81,25 @@ VALUES
     '2024-02-27',
     FALSE
   );
+
+/* 運動ToDoのサンプルデータ */
+INSERT INTO
+  exercise_t (id, user_id, title, load_level, exercise_date, complete)
+VALUES
+  (1, 'goro@xxx.co.jp', '腕立て伏せ 10回', 'LIGHT', CURRENT_DATE, TRUE);
+
+INSERT INTO
+  exercise_t (id, user_id, title, load_level, exercise_date, complete)
+VALUES
+  (2, 'goro@xxx.co.jp', 'スクワット 20回', 'NORMAL', CURRENT_DATE, FALSE);
+
+INSERT INTO
+  exercise_t (id, user_id, title, load_level, exercise_date, complete)
+VALUES
+  (3, 'goro@xxx.co.jp', 'ストレッチ 5分', 'LIGHT', CURRENT_DATE - 1, TRUE);
+
+/* 通知設定のサンプルデータ */
+INSERT INTO
+  user_setting_t (user_id, notify_time, notify_enabled)
+VALUES
+  ('goro@xxx.co.jp', '19:00', TRUE);

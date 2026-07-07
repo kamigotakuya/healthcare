@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+//a
 /**
  * ログインに関する機能・画面を制御する
  */
@@ -19,7 +19,6 @@ public class LoginController {
 
   /**
    * ログイン画面を表示する
-   * 
    * @return ログイン画面
    */
   @GetMapping("/login")
@@ -29,17 +28,17 @@ public class LoginController {
 
   /**
    * ログイン処理を行う
-   * 
-   * @param userId   ユーザID
+   * @param userId ユーザID
    * @param password パスワード
-   * @param model    モデルオブジェクト
+   * @param model モデルオブジェクト
    * @return ログイン成功時はトップページ、失敗時はログイン画面
    */
   @PostMapping("/login")
   public String login(
-      @RequestParam(name = "user_id") String userId,
-      @RequestParam(name = "password") String password,
-      Model model) {
+    @RequestParam(name = "user_id") String userId,
+    @RequestParam(name = "password") String password,
+    Model model
+  ) {
     // ログイン処理
     if (!loginService.login(userId, password)) {
       model.addAttribute("errorMessage", "ユーザIDまたはパスワードが違います。");
@@ -51,7 +50,6 @@ public class LoginController {
 
   /**
    * ログアウト処理を行う
-   * 
    * @return ログイン画面
    */
   @GetMapping("/logout")

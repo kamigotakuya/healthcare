@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HealthCare.com</title>
+    <link
+      rel="icon"
+      th:href="@{/img/common/favicon.ico}"
+      href="../../static/img/common/favicon.ico"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css" />
+  </head>
+
+  <body>
+    <header>
+      <a href="#" th:href="@{/}"
+        ><img
+          class="header-logo"
+          th:src="@{/img/common/healthcare.png}"
+          src="../../static/img/common/healthcare.png"
+        /><strong>HealthCare.com</strong></a
+      >
+      <a href="#" th:href="@{/logout}"
+        ><img th:src="@{/img/common/exit.svg}" src="../../static/img/common/exit.svg" />ログアウト
+      </a>
+    </header>
+    <main>
+      <h1 class="page-title">筋トレ 今日のToDo</h1>
+      <p class="success-message" th:if="${message}" th:text="${message}">メッセージ</p>
+      <p class="error-message" th:if="${errorMessage}" th:text="${errorMessage}">
+        エラーメッセージ
+      </p>
+
+      <!-- レベルアップ・進捗グラフ機能 -->
+      <div class="card">
+        <div class="card-content">
+          <h2>レベル</h2>
+          <div class="level-box">
+            <span class="level-badge" th:text="'Lv.' + ${progress.level}">Lv.1</span>
+            <div class="progress-bar-outer">
+              <div
+                class="progress-bar-inner"
+                th:style="'width:' + ${progress.progressPercent} + '%'"
+              ></div>
+            </div>
+          </div>
+          <p class="progress-label">
+            次のレベルまで
+            <span
+              th:text="${progress.nextLevelExp - progress.currentExp}"
+            >3</span>回（通算達成回数：<span th:text="${progress.totalCompletedCount}">0</span>回）
+          </p>
+          <p>
+            <a href="#" th:href="@{/exercise/calendar}">継続記録カレンダーを見る &rarr;</a>
+          </p>
+        </div>
+      </div>
+      <!-- .card -->
+
+      <!-- デイリー運動ToDoリスト機能 -->
+      <div class="card">
+        <div class="card-content">
+          <h2>今日の運動（<span th:text="${today}">2026-07-07</span>）</h2>
+          <p th:if="${exerciseEntity.exerciseList.isEmpty()}">
+            今日の運動はまだ登録されていません。まずは1つ、気軽に始めてみましょう。
+          </p>
+          <table th:unless="${exerciseEntity.exerciseList.isEmpty()}">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>運動内容</th>
+                <th>負荷</th>
+                <th>状態</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="exercise, status : ${exerciseEntity.exerciseList}">
+                <td th:text="${status.count}">1</td>
+                <td th:text="${exercise.title}">腕立て伏せ 10回</td>
+                <td>
+                  <span
+                    th:class="${exercise.loadLevel.name() == 'LIGHT'} ? 'badge-load-light' : (${exercise.loadLevel.name() == 'NORMAL'} ? 'badge-load-normal' : 'badge-load-hard')"
+                    th:text="${exercise.loadLevel.label}"
+                  >ライト</span>
+                </td>
+                <td th:text="${exercise.isComplate()} ? '完了' : '未完了'">未完了</td>
+                <td>
+                  <form
+                    method="post"
+                    th:action="@{/exercise/complete}"
+                    th:if="${!exercise.isComplate()}"
+                  >
+                    <input type="hidden" th:value="${exercise.id}" name="id" />
+                    <button class="bg-success" type="submit">完了</button>
+                  </form>
+                </td>
+                <td>
+                  <form method="post" th:action="@{/exercise/delete}">
+                    <input type="hidden" th:value="${exercise.id}" name="id" />
+                    <button class="bg-danger" type="submit">削除</button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- .card -->
+
+      <!-- 運動登録フォーム（1日3件まで） -->
+      <div class="card">
+        <div class="card-content">
+          <h2>運動を登録する</h2>
+          <p th:if="${exerciseEntity.isFull()}">
+            今日の登録上限（3件）に達しています。まずは登録済みの運動に取り組みましょう！
+          </p>
+          <form
+            method="post"
+            th:action="@{/exercise/insert}"
+            th:unless="${exerciseEntity.isFull()}"
+          >
+            <label for="title">運動内容</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              placeholder="例：スクワット 20回、ストレッチ 5分"
+            />
+
+            <label for="loadLevel">負荷レベル</label>
+            <select id="loadLevel" name="loadLevel">
+              <option th:each="level : ${loadLevels}" th:value="${level.name()}" th:text="${level.label}">
+                ふつう
+              </option>
+            </select>
+
+            <input type="hidden" name="date" th:value="${today}" />
+            <button class="bg-warning" type="submit">追加</button>
+          </form>
+        </div>
+      </div>
+      <!-- .card -->
+
+      <!-- 帰宅後リマインド通知機能 -->
+      <div class="card">
+        <div class="card-content">
+          <h2>帰宅後リマインド通知</h2>
+          <p>仕事終わりの時間帯を設定すると、「今日は5分だけでもやってみる？」と通知でお知らせします。</p>
+          <form method="post" th:action="@{/settings/notify}">
+            <label for="notifyTime">通知時刻</label>
+            <input
+              id="notifyTime"
+              type="time"
+              name="notifyTime"
+              th:value="${notifySetting.notifyTime}"
+            />
+            <label>
+              <input
+                type="checkbox"
+                name="notifyEnabled"
+                value="true"
+                th:checked="${notifySetting.notifyEnabled}"
+              />
+              通知をONにする
+            </label>
+            <button type="submit">設定を保存</button>
+          </form>
+        </div>
+      </div>
+      <!-- .card -->
+    </main>
+    <footer>&copy; 20xx HealthCare.com</footer>
+
+    <!--
+      通知の実現方法について：
+      ブラウザのNotification APIを利用し、このページを開いている間、
+      設定した通知時刻になったら通知を表示します。
+      実運用ではService Workerやサーバー側のスケジューラを使ったプッシュ通知が
+      望ましいですが、本課題では簡易的な実装としています。
+    -->
+    <script th:inline="javascript">
+      (function () {
+        const notifyTime = /*[[${notifySetting.notifyTime}]]*/ "19:00";
+        const notifyEnabled = /*[[${notifySetting.notifyEnabled}]]*/ false;
+
+        if (!notifyEnabled || !("Notification" in window)) {
+          return;
+        }
+
+        if (Notification.permission === "default") {
+          Notification.requestPermission();
+        }
+
+        function checkAndNotify() {
+          if (Notification.permission !== "granted") {
+            return;
+          }
+          const now = new Date();
+          const hh = String(now.getHours()).padStart(2, "0");
+          const mm = String(now.getMinutes()).padStart(2, "0");
+          if (hh + ":" + mm === notifyTime) {
+            new Notification("筋トレ", {
+              body: "今日は5分だけでもやってみる？",
+            });
+          }
+        }
+
+        setInterval(checkAndNotify, 60 * 1000);
+      })();
+    </script>
+  </body>
+</html>
