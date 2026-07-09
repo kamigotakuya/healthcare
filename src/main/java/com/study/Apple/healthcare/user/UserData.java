@@ -3,13 +3,11 @@ package com.study.Apple.healthcare.user;
 /**
  * 1件分のユーザ情報です。
  *
- * <p>
- * 各項目のデータ構造については、データベース定義をご覧ください。
- * 
+ * <p>各項目のデータ構造については、データベース定義をご覧ください。
  * @author 情報太郎
  */
 public class UserData {
-
+//a
   /**
    * ユーザID（メールアドレス）
    * 主キー、必須入力、メールアドレス形式
@@ -45,8 +43,7 @@ public class UserData {
    */
   private String role;
 
-  public UserData() {
-  }
+  public UserData() {}
 
   public UserData(String userId, String password, String userName, String role, boolean enabled) {
     this.userId = userId;

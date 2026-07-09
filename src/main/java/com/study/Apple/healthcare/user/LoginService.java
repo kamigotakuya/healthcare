@@ -7,11 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+//a
 /**
  * ログインサービスクラスです。
  * ログイン関連の操作を提供します。
- * 
  * @author 情報太郎
  */
 @Transactional
@@ -30,8 +29,7 @@ public class LoginService {
 
   /**
    * ログイン処理を行います。
-   * 
-   * @param userId   ユーザID
+   * @param userId ユーザID
    * @param password パスワード
    * @return ログイン成功時はtrue、失敗時はfalse
    */
@@ -61,7 +59,6 @@ public class LoginService {
 
   /**
    * ユーザーデータをマッピングします。
-   * 
    * @param item ユーザーデータ
    * @return マッピングしたユーザーデータ
    */
@@ -86,7 +83,6 @@ public class LoginService {
 
   /**
    * ログインチェックを行います。
-   * 
    * @return ログイン中の場合はtrue、未ログインの場合はfalse
    */
   public boolean isLogin() {
@@ -99,9 +95,9 @@ public class LoginService {
     return true;
   }
 
+
   /**
    * ログイン中ユーザーのユーザーIDを取得します。
-   * 
    * @return ログイン中ユーザーのユーザーID
    */
   public String getLoginUserId() {

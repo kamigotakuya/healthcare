@@ -277,3 +277,95 @@ footer {
   padding: 10px; /* 内側に10pxの余白を設る */
   margin: 10px; /* 外側に10pxの余白を設ける */
 }
+
+/** レベルアップ・進捗グラフ機能 用スタイル */
+.level-box {
+  display: flex; /* レベル表示とバーを横並びに */
+  align-items: center; /* 縦方向中央揃え */
+  gap: 15px; /* 要素間の余白 */
+  margin-bottom: 10px; /* 下の余白 */
+}
+
+.level-badge {
+  background-color: var(--primary-color); /* メインカラーの背景 */
+  color: var(--white-color); /* テキストを白に */
+  font-weight: bold; /* 太字 */
+  padding: 8px 16px; /* 内側の余白 */
+  border-radius: 20px; /* 丸みを持たせてバッジ風に */
+  white-space: nowrap; /* 折り返し防止 */
+}
+
+.progress-bar-outer {
+  flex-grow: 1; /* 残りの幅いっぱいに広げる */
+  background-color: var(--pale-gray-color); /* バー背景色 */
+  border-radius: 10px; /* 角を丸く */
+  height: 20px; /* バーの高さ */
+  overflow: hidden; /* はみ出し防止 */
+}
+
+.progress-bar-inner {
+  background-color: var(--success-color); /* 達成度合いを示す色 */
+  height: 100%; /* 親要素いっぱいの高さ */
+  transition: width 0.3s; /* 変化時のアニメーション */
+}
+
+.progress-label {
+  font-size: 14px; /* やや小さめの文字 */
+  color: var(--dark-gray-color); /* 濃い灰色 */
+}
+
+/** 負荷レベル用バッジ */
+.badge-load-light {
+  background-color: var(--light-primary-color);
+  color: var(--primary-color);
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.badge-load-normal {
+  background-color: #fff3cd;
+  color: var(--warning-color);
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.badge-load-hard {
+  background-color: #ffcdd2;
+  color: var(--danger-color);
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+/** 継続記録・カレンダー機能 用スタイル */
+.calendar-grid {
+  display: grid; /* グリッドレイアウトを使用 */
+  grid-template-columns: repeat(7, 1fr); /* 7列（曜日）で均等割り */
+  gap: 6px; /* セル間の余白 */
+  margin-top: 10px; /* 上の余白 */
+}
+
+.calendar-day {
+  aspect-ratio: 1 / 1; /* 正方形のセル */
+  display: flex; /* 中央揃えのため */
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px; /* 角を丸く */
+  background-color: var(--pale-gray-color); /* 未達成日の背景 */
+  color: var(--dark-gray-color); /* 未達成日の文字色 */
+  font-size: 14px; /* 文字サイズ */
+}
+
+.calendar-day.achieved {
+  background-color: var(--success-color); /* 達成日はグリーンで強調 */
+  color: var(--white-color); /* 文字を白に */
+  font-weight: bold; /* 太字で目立たせる */
+}
+
+.achievement-rate {
+  font-size: 28px; /* 大きめに表示して達成感を演出 */
+  font-weight: bold; /* 太字 */
+  color: var(--success-color); /* 成功カラー */
+}
