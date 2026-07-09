@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
@@ -39,15 +40,43 @@
             <span th:text="${progress.monthlyAchievementRate}">0</span>%
           </p>
           <p>運動を実施した日を緑色で表示しています。</p>
+
+          <div class="calendar-weekdays">
+            <div class="calendar-weekday sunday">日</div>
+            <div class="calendar-weekday">月</div>
+            <div class="calendar-weekday">火</div>
+            <div class="calendar-weekday">水</div>
+            <div class="calendar-weekday">木</div>
+            <div class="calendar-weekday">金</div>
+            <div class="calendar-weekday saturday">土</div>
+          </div>
+
           <div class="calendar-grid">
+            <!-- 月初日を正しい曜日位置に合わせるための空白セル -->
+            <th:block th:if="${progress.leadingEmptyDays > 0}">
+              <div
+                class="calendar-day empty"
+                th:each="i : ${#numbers.sequence(1, progress.leadingEmptyDays)}"
+              ></div>
+            </th:block>
+
             <div
               class="calendar-day"
               th:each="entry : ${progress.calendar}"
-              th:classappend="${entry.value} ? 'achieved' : ''"
+              th:with="dow=${(progress.leadingEmptyDays + entry.key - 1) % 7}"
+              th:classappend="${(entry.value ? 'achieved ' : '') + (dow == 0 ? 'sunday' : (dow == 6 ? 'saturday' : ''))}"
               th:text="${entry.key}"
             >
               1
             </div>
+
+            <!-- 最終週を7列で揃えるための空白セル -->
+            <th:block th:if="${progress.trailingEmptyDays > 0}">
+              <div
+                class="calendar-day empty"
+                th:each="i : ${#numbers.sequence(1, progress.trailingEmptyDays)}"
+              ></div>
+            </th:block>
           </div>
         </div>
       </div>

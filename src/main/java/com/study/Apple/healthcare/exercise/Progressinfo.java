@@ -38,6 +38,18 @@ public class Progressinfo {
    */
   private Map<Integer, Boolean> calendar = new LinkedHashMap<Integer, Boolean>();
 
+  /**
+   * 月初日（1日）が週の何番目にあたるかを表す空白セル数。
+   * 日曜始まりで 0(日)〜6(土) 。
+   * 一般的なカレンダーのように、1日を正しい曜日の位置から表示するために使用します。
+   */
+  private int leadingEmptyDays = 0;
+
+  /**
+   * 月末日の後、最終週を7列で揃えるために必要な空白セル数。
+   */
+  private int trailingEmptyDays = 0;
+
   public int getLevel() {
     return level;
   }
@@ -92,5 +104,21 @@ public class Progressinfo {
 
   public void setCalendar(Map<Integer, Boolean> calendar) {
     this.calendar = calendar;
+  }
+
+  public int getLeadingEmptyDays() {
+    return leadingEmptyDays;
+  }
+
+  public void setLeadingEmptyDays(int leadingEmptyDays) {
+    this.leadingEmptyDays = leadingEmptyDays;
+  }
+
+  public int getTrailingEmptyDays() {
+    return trailingEmptyDays;
+  }
+
+  public void setTrailingEmptyDays(int trailingEmptyDays) {
+    this.trailingEmptyDays = trailingEmptyDays;
   }
 }

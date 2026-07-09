@@ -219,6 +219,16 @@ public Progressinfo calculateProgress(String userId) {
     }
     progress.setMonthlyAchievementRate(achievedDaysThisMonth * 100 / lastDayToCount);
 
+    // 一般的なカレンダーのように、1日を正しい曜日の位置に表示するための空白セル数を算出する。
+    // DayOfWeek#getValue() は月曜=1〜日曜=7を返すため、日曜始まり(0〜6)に変換する。
+    int firstDayOfWeekValue = thisMonth.atDay(1).getDayOfWeek().getValue() % 7;
+    progress.setLeadingEmptyDays(firstDayOfWeekValue);
+
+    // 最終週を7列で揃えるための末尾の空白セル数を算出する。
+    int totalCells = firstDayOfWeekValue + thisMonth.lengthOfMonth();
+    int trailingEmptyDays = (7 - (totalCells % 7)) % 7;
+    progress.setTrailingEmptyDays(trailingEmptyDays);
+
     return progress;
   }
 

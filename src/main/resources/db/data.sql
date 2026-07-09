@@ -7,6 +7,8 @@ DELETE FROM exercise_t;
 
 DELETE FROM user_setting_t;
 
+DELETE FROM body_record_t;
+
 /* ユーザマスタのデータ（ADMIN権限） */
 INSERT INTO
   user_m (user_id, PASSWORD, user_name, ROLE, enabled)
@@ -103,3 +105,19 @@ INSERT INTO
   user_setting_t (user_id, notify_time, notify_enabled)
 VALUES
   ('goro@xxx.co.jp', '19:00', TRUE);
+
+/* 体重・BMI記録のサンプルデータ（推移がわかるよう複数件登録） */
+INSERT INTO
+  body_record_t (id, user_id, record_date, height_cm, weight_kg, bmi)
+VALUES
+  (1, 'goro@xxx.co.jp', CURRENT_DATE - 21, 170.0, 72.5, 25.1);
+
+INSERT INTO
+  body_record_t (id, user_id, record_date, height_cm, weight_kg, bmi)
+VALUES
+  (2, 'goro@xxx.co.jp', CURRENT_DATE - 14, 170.0, 71.8, 24.8);
+
+INSERT INTO
+  body_record_t (id, user_id, record_date, height_cm, weight_kg, bmi)
+VALUES
+  (3, 'goro@xxx.co.jp', CURRENT_DATE - 7, 170.0, 71.0, 24.6);

@@ -340,11 +340,34 @@ footer {
 }
 
 /** 継続記録・カレンダー機能 用スタイル */
-.calendar-grid {
-  display: grid; /* グリッドレイアウトを使用 */
+.calendar-weekdays {
+  display: grid; /* 曜日ラベル用のグリッド */
   grid-template-columns: repeat(7, 1fr); /* 7列（曜日）で均等割り */
   gap: 6px; /* セル間の余白 */
-  margin-top: 10px; /* 上の余白 */
+  margin-top: 16px; /* カレンダー本体との間隔 */
+}
+
+.calendar-weekday {
+  text-align: center; /* 中央揃え */
+  font-size: 13px; /* 文字サイズ */
+  font-weight: bold; /* 太字 */
+  color: var(--dark-gray-color); /* 通常曜日の文字色 */
+  padding-bottom: 4px; /* 下の余白 */
+}
+
+.calendar-weekday.sunday {
+  color: #d9534f; /* 日曜は赤系で強調 */
+}
+
+.calendar-weekday.saturday {
+  color: #337ab7; /* 土曜は青系で強調 */
+}
+
+.calendar-grid {
+  display: grid; /* グリッドレイアウトを使用 */
+  grid-template-columns: repeat(7, 1fr); /* 7列（曜日）で均等割り、1週間ごとに行が切り替わる */
+  gap: 6px; /* セル間の余白 */
+  margin-top: 4px; /* 上の余白 */
 }
 
 .calendar-day {
@@ -358,6 +381,18 @@ footer {
   font-size: 14px; /* 文字サイズ */
 }
 
+.calendar-day.empty {
+  background-color: transparent; /* 月外の空白セルは背景なし */
+}
+
+.calendar-day.sunday {
+  color: #d9534f; /* 日曜のマスは赤字 */
+}
+
+.calendar-day.saturday {
+  color: #337ab7; /* 土曜のマスは青字 */
+}
+
 .calendar-day.achieved {
   background-color: var(--success-color); /* 達成日はグリーンで強調 */
   color: var(--white-color); /* 文字を白に */
@@ -368,4 +403,70 @@ footer {
   font-size: 28px; /* 大きめに表示して達成感を演出 */
   font-weight: bold; /* 太字 */
   color: var(--success-color); /* 成功カラー */
+}
+
+/* 体重・BMI推移記録機能 */
+.bmi-summary {
+  display: flex; /* 画像とテキストを横並びに */
+  align-items: center;
+  gap: 20px; /* 画像とテキストの間隔 */
+  flex-wrap: wrap; /* 画面が狭い場合は折り返す */
+}
+
+.bmi-summary-image {
+  width: 90px; /* サムネイルサイズ */
+  height: 90px;
+  object-fit: contain; /* 画像の縦横比を保ったまま枠に収める */
+}
+
+.bmi-summary-value {
+  font-size: 20px; /* BMI値を強調表示 */
+  font-weight: bold;
+}
+
+.badge-bmi {
+  display: inline-block;
+  margin-left: 8px; /* BMI値との間隔 */
+  padding: 2px 10px;
+  border-radius: 12px; /* 丸みのあるバッジ形状 */
+  background-color: var(--light-primary-color); /* 判定バッジの背景 */
+  color: var(--primary-color); /* 判定バッジの文字色 */
+  font-size: 13px;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+.chart-legend {
+  display: flex; /* 凡例を横並びに */
+  gap: 16px; /* 凡例間の間隔 */
+  margin-bottom: 8px; /* グラフとの間隔 */
+  font-size: 13px;
+  color: var(--dark-gray-color);
+}
+
+.chart-legend-item {
+  display: flex; /* 丸アイコンとラベルを横並びに */
+  align-items: center;
+  gap: 6px; /* アイコンとラベルの間隔 */
+}
+
+.chart-dot {
+  display: inline-block;
+  width: 10px; /* 凡例アイコンのサイズ */
+  height: 10px;
+  border-radius: 50%; /* 円形にする */
+}
+
+.chart-dot-weight {
+  background-color: #337ab7; /* 体重ラインと同色 */
+}
+
+.chart-dot-bmi {
+  background-color: #e67e22; /* BMIラインと同色 */
+}
+
+#bodyTrendChart {
+  width: 100%; /* 画面幅に合わせて拡大縮小 */
+  max-width: 600px;
+  height: auto;
 }

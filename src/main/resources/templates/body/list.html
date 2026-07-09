@@ -1,0 +1,252 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HealthCare.com</title>
+    <link
+      rel="icon"
+      th:href="@{/img/common/favicon.ico}"
+      href="../../static/img/common/favicon.ico"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css" />
+  </head>
+
+  <body>
+    <header>
+      <a href="#" th:href="@{/}"
+        ><img
+          class="header-logo"
+          th:src="@{/img/common/healthcare.png}"
+          src="../../static/img/common/healthcare.png"
+        /><strong>HealthCare.com</strong></a
+      >
+      <a href="#" th:href="@{/logout}"
+        ><img th:src="@{/img/common/exit.svg}" src="../../static/img/common/exit.svg" />ログアウト
+      </a>
+    </header>
+    <main>
+      <h1 class="page-title">体重・BMI 推移記録</h1>
+      <p class="success-message" th:if="${message}" th:text="${message}">メッセージ</p>
+      <p class="error-message" th:if="${errorMessage}" th:text="${errorMessage}">
+        エラーメッセージ
+      </p>
+
+      <!-- 最新記録サマリー -->
+      <div class="card" th:if="${bodyRecordEntity.latestRecord != null}">
+        <div class="card-content">
+          <h2>最新の記録</h2>
+          <div class="bmi-summary">
+            <img
+              class="bmi-summary-image"
+              th:src="@{'/img/bmi/' + ${bodyRecordEntity.latestRecord.bmiImage}}"
+              src="../../static/img/bmi/normal.png"
+              alt="BMIイメージ"
+            />
+            <div class="bmi-summary-text">
+              <p class="bmi-summary-value">
+                BMI
+                <span th:text="${bodyRecordEntity.latestRecord.bmi}">22.0</span>
+                <span
+                  class="badge-bmi"
+                  th:text="${bodyRecordEntity.latestRecord.bmiCategory}"
+                >普通体重</span>
+              </p>
+              <p>
+                体重
+                <span th:text="${bodyRecordEntity.latestRecord.weightKg}">65.0</span>kg／
+                身長
+                <span th:text="${bodyRecordEntity.latestRecord.heightCm}">170.0</span>cm
+              </p>
+              <p th:if="${bodyRecordEntity.weightChange != null}">
+                初回記録からの変化：
+                <span
+                  th:text="${bodyRecordEntity.weightChange > 0 ? '+' + bodyRecordEntity.weightChange : bodyRecordEntity.weightChange}"
+                >-1.5</span>kg
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- .card -->
+
+      <!-- 推移グラフ -->
+      <div class="card" th:if="${bodyRecordEntity.recordList.size() >= 2}">
+        <div class="card-content">
+          <h2>体重・BMIの推移</h2>
+          <div class="chart-legend">
+            <span class="chart-legend-item"><i class="chart-dot chart-dot-weight"></i>体重(kg)</span>
+            <span class="chart-legend-item"><i class="chart-dot chart-dot-bmi"></i>BMI</span>
+          </div>
+          <canvas id="bodyTrendChart" width="600" height="260"></canvas>
+        </div>
+      </div>
+      <!-- .card -->
+
+      <!-- 記録一覧 -->
+      <div class="card">
+        <div class="card-content">
+          <h2>記録一覧</h2>
+          <p th:if="${bodyRecordEntity.recordList.isEmpty()}">
+            まだ記録がありません。下のフォームから最初の記録を登録してみましょう。
+          </p>
+          <table th:unless="${bodyRecordEntity.recordList.isEmpty()}">
+            <thead>
+              <tr>
+                <th>記録日</th>
+                <th>身長(cm)</th>
+                <th>体重(kg)</th>
+                <th>BMI</th>
+                <th>判定</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 新しい記録が上に来るよう、記録日の降順で表示 -->
+              <tr
+                th:each="record : ${bodyRecordEntity.recordListDesc}"
+              >
+                <td th:text="${#dates.format(record.recordDate, 'yyyy/MM/dd')}">2026/07/01</td>
+                <td th:text="${record.heightCm}">170.0</td>
+                <td th:text="${record.weightKg}">65.0</td>
+                <td th:text="${record.bmi}">22.0</td>
+                <td th:text="${record.bmiCategory}">普通体重</td>
+                <td>
+                  <form method="post" th:action="@{/body/delete}">
+                    <input type="hidden" th:value="${record.id}" name="id" />
+                    <button class="bg-danger" type="submit">削除</button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- .card -->
+
+      <!-- 記録登録フォーム -->
+      <div class="card">
+        <div class="card-content">
+          <h2>記録を登録する</h2>
+          <form method="post" th:action="@{/body/insert}">
+            <label for="height">身長(cm)</label>
+            <input
+              type="number"
+              step="0.1"
+              id="height"
+              name="height"
+              placeholder="例：170.0"
+              th:value="${bodyRecordEntity.latestRecord != null ? bodyRecordEntity.latestRecord.heightCm : ''}"
+            />
+
+            <label for="weight">体重(kg)</label>
+            <input type="number" step="0.1" id="weight" name="weight" placeholder="例：65.0" />
+
+            <label for="date">記録日</label>
+            <input id="date" type="date" name="date" th:value="${today}" />
+
+            <button class="bg-warning" type="submit">登録</button>
+          </form>
+        </div>
+      </div>
+      <!-- .card -->
+    </main>
+    <footer>&copy; 20xx HealthCare.com</footer>
+
+    <!--
+      推移グラフの実現方法について：
+      外部ライブラリを使わず、Canvas APIで体重(kg)とBMIの2本の折れ線を
+      それぞれの値域で正規化して描画しています。
+    -->
+    <script th:inline="javascript">
+      (function () {
+        const chartData = /*[(${bodyRecordEntity.chartDataJson})]*/ [];
+        const canvas = document.getElementById("bodyTrendChart");
+        if (!canvas || !chartData || chartData.length < 2) {
+          return;
+        }
+
+        const ctx = canvas.getContext("2d");
+        const width = canvas.width;
+        const height = canvas.height;
+        const paddingLeft = 40;
+        const paddingRight = 40;
+        const paddingTop = 20;
+        const paddingBottom = 30;
+        const plotWidth = width - paddingLeft - paddingRight;
+        const plotHeight = height - paddingTop - paddingBottom;
+
+        const weights = chartData.map(function (d) {
+          return d.weight;
+        });
+        const bmis = chartData.map(function (d) {
+          return d.bmi;
+        });
+
+        function buildScale(values) {
+          const min = Math.min.apply(null, values);
+          const max = Math.max.apply(null, values);
+          // 上下に少し余白を持たせ、値が横線ぴったりにならないようにする
+          const margin = (max - min) * 0.2 || 1;
+          return { min: min - margin, max: max + margin };
+        }
+
+        const weightScale = buildScale(weights);
+        const bmiScale = buildScale(bmis);
+
+        function xPos(index) {
+          return paddingLeft + (plotWidth * index) / (chartData.length - 1);
+        }
+
+        function yPos(value, scale) {
+          const ratio = (value - scale.min) / (scale.max - scale.min);
+          return paddingTop + plotHeight - ratio * plotHeight;
+        }
+
+        function drawLine(values, scale, color) {
+          ctx.beginPath();
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 2;
+          values.forEach(function (value, index) {
+            const x = xPos(index);
+            const y = yPos(value, scale);
+            if (index === 0) {
+              ctx.moveTo(x, y);
+            } else {
+              ctx.lineTo(x, y);
+            }
+          });
+          ctx.stroke();
+
+          values.forEach(function (value, index) {
+            const x = xPos(index);
+            const y = yPos(value, scale);
+            ctx.beginPath();
+            ctx.fillStyle = color;
+            ctx.arc(x, y, 3, 0, Math.PI * 2);
+            ctx.fill();
+          });
+        }
+
+        // 横軸（日付ラベル）
+        ctx.fillStyle = "#666";
+        ctx.font = "11px sans-serif";
+        ctx.textAlign = "center";
+        chartData.forEach(function (d, index) {
+          // ラベルが密集しすぎないよう、件数が多い場合は間引く
+          const step = Math.ceil(chartData.length / 6);
+          if (index % step === 0 || index === chartData.length - 1) {
+            ctx.fillText(d.date, xPos(index), height - 8);
+          }
+        });
+
+        drawLine(weights, weightScale, "#337ab7");
+        drawLine(bmis, bmiScale, "#e67e22");
+      })();
+    </script>
+  </body>
+</html>

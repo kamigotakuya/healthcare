@@ -1,5 +1,6 @@
 package com.study.Apple.healthcare.task;
 
+
 import com.study.Apple.healthcare.user.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -66,9 +67,9 @@ public class TaskController {
    */
   @PostMapping("/task/insert")
   public String insertTask(
-      @RequestParam(name = "title") String title,
-      @RequestParam(name = "limit") String limit,
-      Model model) {
+    @RequestParam(name = "title") String title,
+    @RequestParam(name = "limit") String limit,
+    Model model) {
     // 入力チェック
     boolean isValid = taskService.validate(title, limit);
     if (!isValid) {

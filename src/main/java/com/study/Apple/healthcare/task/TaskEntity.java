@@ -2,15 +2,13 @@ package com.study.Apple.healthcare.task;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//a
 /**
  * 複数件のタスク情報を保持します。
  *
- * <p>
- * DBとController間を本クラスでモデル化します。<br>
+ * <p>DBとController間を本クラスでモデル化します。<br>
  * DBからタスク情報が取得できない場合は、リストが空となります。
- * <p>
- * <strong>リストにnullは含まれません</strong>
+ * <p><strong>リストにnullは含まれません</strong>
  *
  * @author 情報太郎
  */

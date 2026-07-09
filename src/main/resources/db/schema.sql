@@ -40,3 +40,14 @@ CREATE TABLE IF NOT EXISTS
     notify_time VARCHAR(5), /* HH:mm形式 */
     notify_enabled BOOLEAN
   );
+
+/* 体重・BMI記録テーブル（体重・BMI推移記録機能） */
+CREATE TABLE IF NOT EXISTS
+  body_record_t (
+    id INT PRIMARY KEY,
+    user_id VARCHAR(50),
+    record_date DATE,
+    height_cm DECIMAL(5, 1),
+    weight_kg DECIMAL(5, 1),
+    bmi DECIMAL(4, 1)
+  );
