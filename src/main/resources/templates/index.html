@@ -1,16 +1,25 @@
-
-
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>HealthCare.com</title>
-    <link rel="icon" th:href="@{/img/common/favicon.ico}" href="../static/img/common/favicon.ico" />
+    <link
+      rel="icon"
+      th:href="@{/img/common/favicon.ico}"
+      href="../static/img/common/favicon.ico"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      th:href="@{/css/style.css}"
+      href="../static/css/style.css"
+    />
   </head>
   <body>
     <header>
@@ -22,21 +31,30 @@
         /><strong>HealthCare.com</strong></a
       >
       <a href="#" th:href="@{/logout}"
-        ><img th:src="@{/img/common/exit.svg}" src="../static/img/common/exit.svg" />ログアウト
+        ><img
+          th:src="@{/img/common/exit.svg}"
+          src="../static/img/common/exit.svg"
+        />ログアウト
       </a>
     </header>
     <main>
       <h1 class="page-title">
-        <span th:text="${session.userData.userName}">XXXX</span>さんのダッシュボード
+        <span th:text="${session.userData.userName}">XXXX</span
+        >さんのダッシュボード
       </h1>
       <div class="card">
         <div class="card-content">
           <h3>一般機能</h3>
           <ul>
             <li><a href="#" th:href="@{/exercise}">筋トレ 今日のToDo</a></li>
-            <li><a href="#" th:href="@{/exercise/calendar}">継続記録カレンダー</a></li>
+            <li>
+              <a href="#" th:href="@{/exercise/calendar}">継続記録カレンダー</a>
+            </li>
             <li><a href="#" th:href="@{/body}">体重・BMI 推移記録</a></li>
             <li><a href="#" th:href="@{/task}">タスク管理 </a></li>
+            <li>
+              <li><a href="#" th:href="@{/weather}">天気予報</a></li>
+            </li>
           </ul>
         </div>
       </div>

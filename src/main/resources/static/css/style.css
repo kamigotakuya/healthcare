@@ -2,7 +2,7 @@
 /* 文字エンコーディングをUTF-8に設定して、多言語対応を可能にする */
 
 /*
- WebPortalのCSS設定.
+WebPortalのCSS設定.
  */
 
 /** 共通のカラースキーム */
@@ -365,7 +365,10 @@ footer {
 
 .calendar-grid {
   display: grid; /* グリッドレイアウトを使用 */
-  grid-template-columns: repeat(7, 1fr); /* 7列（曜日）で均等割り、1週間ごとに行が切り替わる */
+  grid-template-columns: repeat(
+    7,
+    1fr
+  ); /* 7列（曜日）で均等割り、1週間ごとに行が切り替わる */
   gap: 6px; /* セル間の余白 */
   margin-top: 4px; /* 上の余白 */
 }
