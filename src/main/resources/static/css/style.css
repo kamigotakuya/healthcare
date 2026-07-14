@@ -2,7 +2,7 @@
 /* 文字エンコーディングをUTF-8に設定して、多言語対応を可能にする */
 
 /*
-WebPortalのCSS設定.
+ WebPortalのCSS設定.
  */
 
 /** 共通のカラースキーム */
@@ -365,10 +365,7 @@ footer {
 
 .calendar-grid {
   display: grid; /* グリッドレイアウトを使用 */
-  grid-template-columns: repeat(
-    7,
-    1fr
-  ); /* 7列（曜日）で均等割り、1週間ごとに行が切り替わる */
+  grid-template-columns: repeat(7, 1fr); /* 7列（曜日）で均等割り、1週間ごとに行が切り替わる */
   gap: 6px; /* セル間の余白 */
   margin-top: 4px; /* 上の余白 */
 }
@@ -472,4 +469,86 @@ footer {
   width: 100%; /* 画面幅に合わせて拡大縮小 */
   max-width: 600px;
   height: auto;
+}
+
+/* 喫煙リスクシミュレーション機能 */
+.smoking-result-grid {
+  display: grid; /* 結果カードを格子状に配置 */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px; /* カード間の間隔 */
+  margin-top: 12px;
+}
+
+.smoking-result-item {
+  background-color: var(--light-primary-color); /* 結果項目の背景 */
+  border-radius: 8px; /* 角を丸くする */
+  padding: 14px; /* 内側の余白 */
+  text-align: center;
+}
+
+.smoking-result-label {
+  font-size: 13px; /* ラベルは控えめなサイズ */
+  color: var(--dark-gray-color);
+  margin: 0 0 6px 0;
+}
+
+.smoking-result-value {
+  font-size: 22px; /* 数値は強調表示 */
+  font-weight: bold;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.smoking-result-value.danger {
+  color: var(--danger-color); /* 短縮年数など注意を促す値 */
+}
+
+/* 未成年喫煙の警告用オーバーレイ（実際に通報するものではありません） */
+.police-alert-overlay {
+  display: none; /* JSで表示切替 */
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  animation: police-flash 0.5s infinite; /* 赤と暗色を交互に点滅 */
+}
+
+@keyframes police-flash {
+  0%,
+  100% {
+    background-color: rgba(244, 67, 54, 0.85); /* 赤色フラッシュ */
+  }
+  50% {
+    background-color: rgba(20, 20, 40, 0.9); /* 暗色フラッシュ */
+  }
+}
+
+.police-alert-box {
+  background-color: var(--white-color);
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(var(--black-color-rgb), 0.4);
+}
+
+.police-alert-siren {
+  font-size: 42px; /* サイレン絵文字を大きく表示 */
+  margin-bottom: 10px;
+}
+
+.police-alert-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--danger-color);
+  margin: 0 0 10px 0;
+}
+
+.police-alert-message {
+  font-size: 14px;
+  color: var(--dark-gray-color);
+  margin: 0 0 16px 0;
+  line-height: 1.6;
 }

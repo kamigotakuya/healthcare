@@ -1,0 +1,187 @@
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HealthCare.com</title>
+    <link
+      rel="icon"
+      th:href="@{/img/common/favicon.ico}"
+      href="../../static/img/common/favicon.ico"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css" />
+  </head>
+
+  <body>
+    <header>
+      <a href="#" th:href="@{/}"
+        ><img
+          class="header-logo"
+          th:src="@{/img/common/healthcare.png}"
+          src="../../static/img/common/healthcare.png"
+        /><strong>HealthCare.com</strong></a
+      >
+      <a href="#" th:href="@{/logout}"
+        ><img th:src="@{/img/common/exit.svg}" src="../../static/img/common/exit.svg" />ログアウト
+      </a>
+    </header>
+    <main>
+      <h1 class="page-title">喫煙リスクシミュレーション</h1>
+      <p class="error-message" th:if="${errorMessage}" th:text="${errorMessage}">
+        エラーメッセージ
+      </p>
+
+      <!-- 入力フォーム -->
+      <div class="card">
+        <div class="card-content">
+          <h2>あなたの情報を入力してください</h2>
+          <form method="post" th:action="@{/smoking/calculate}">
+            <label for="gender">性別</label>
+            <select id="gender" name="gender">
+              <option value="male" th:selected="${smokingInputData.gender == 'male'}">男性</option>
+              <option value="female" th:selected="${smokingInputData.gender == 'female'}">女性</option>
+            </select>
+
+            <label for="weightKg">体重(kg)</label>
+            <input
+              type="number"
+              step="0.1"
+              id="weightKg"
+              name="weightKg"
+              placeholder="例：65.0"
+              th:value="${smokingInputData.weightKg}"
+            />
+
+            <label for="smokingStartAge">タバコを吸い始めた年齢</label>
+            <input
+              type="number"
+              id="smokingStartAge"
+              name="smokingStartAge"
+              placeholder="例：19"
+              th:value="${smokingInputData.smokingStartAge}"
+            />
+
+            <label for="cigarettesPerDay">1日に吸うタバコの本数</label>
+            <input
+              type="number"
+              id="cigarettesPerDay"
+              name="cigarettesPerDay"
+              placeholder="例：20"
+              th:value="${smokingInputData.cigarettesPerDay}"
+            />
+
+            <label for="currentAge">現在の年齢</label>
+            <input
+              type="number"
+              id="currentAge"
+              name="currentAge"
+              placeholder="例：35"
+              th:value="${smokingInputData.currentAge}"
+            />
+
+            <button class="bg-warning" type="submit">シミュレーションする</button>
+          </form>
+        </div>
+      </div>
+      <!-- .card -->
+
+      <!-- シミュレーション結果 -->
+      <div class="card" th:if="${smokingResultEntity != null}">
+        <div class="card-content">
+          <h2>シミュレーション結果</h2>
+          <div class="smoking-result-grid">
+            <div class="smoking-result-item">
+              <p class="smoking-result-label">喫煙しなかった場合の推定寿命</p>
+              <p class="smoking-result-value">
+                <span th:text="${smokingResultEntity.baseLifeExpectancy}">81.0</span>歳
+              </p>
+            </div>
+            <div class="smoking-result-item">
+              <p class="smoking-result-label">喫煙により短くなる推定年数</p>
+              <p class="smoking-result-value danger">
+                −<span th:text="${smokingResultEntity.yearsLost}">5.0</span>年
+              </p>
+            </div>
+            <div class="smoking-result-item">
+              <p class="smoking-result-label">このままの場合の推定寿命（死亡想定年齢）</p>
+              <p class="smoking-result-value danger">
+                <span th:text="${smokingResultEntity.estimatedDeathAge}">76.0</span>歳
+              </p>
+            </div>
+            <div class="smoking-result-item">
+              <p class="smoking-result-label">死亡想定年</p>
+              <p class="smoking-result-value">
+                西暦<span th:text="${smokingResultEntity.estimatedDeathYear}">2067</span>年頃
+              </p>
+            </div>
+          </div>
+          <p class="mt-10" style="font-size: 12px; color: var(--gray-color)">
+            ※本結果は健康啓発を目的とした簡易シミュレーションです。統計的な平均値をもとにした概算であり、医学的な診断・予測ではありません。
+          </p>
+        </div>
+      </div>
+      <!-- .card -->
+    </main>
+    <footer>&copy; 20xx HealthCare.com</footer>
+
+    <!--
+      未成年喫煙 警告オーバーレイについて：
+      入力された喫煙開始年齢が20歳未満だった場合にのみ表示します。
+      実際に警察へ通報する機能ではなく、驚かせることで注意を促すための演出です。
+      数秒後に自動でネタばらしを行い、正しい情報（20歳未満の喫煙は法律で禁止）を案内します。
+    -->
+    <div id="policeAlertOverlay" class="police-alert-overlay">
+      <div class="police-alert-box">
+        <div id="policeAlertPhase1">
+          <div class="police-alert-siren">🚨🚨🚨</div>
+          <p class="police-alert-title">通報中...</p>
+          <p class="police-alert-message">
+            20歳未満での喫煙開始が検知されました。<br />
+            現在、最寄りの警察署に通報しています。
+          </p>
+        </div>
+        <div id="policeAlertPhase2" style="display: none">
+          <div class="police-alert-siren">😉</div>
+          <p class="police-alert-title" style="color: var(--primary-color)">
+            なんて、うそです！
+          </p>
+          <p class="police-alert-message">
+            もちろん実際に通報などはしていませんので、ご安心ください。<br />
+            ただし、20歳未満の喫煙は法律で禁止されています。<br />
+            早めの禁煙を考えてみませんか？
+          </p>
+          <button type="button" onclick="document.getElementById('policeAlertOverlay').style.display='none'">
+            閉じる
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script th:inline="javascript">
+      (function () {
+        const isUnderageStart = /*[[${smokingResultEntity != null ? smokingResultEntity.underageStart : false}]]*/ false;
+        if (!isUnderageStart) {
+          return;
+        }
+
+        const overlay = document.getElementById("policeAlertOverlay");
+        const phase1 = document.getElementById("policeAlertPhase1");
+        const phase2 = document.getElementById("policeAlertPhase2");
+
+        overlay.style.display = "flex";
+
+        setTimeout(function () {
+          overlay.style.animation = "none"; // 点滅を止めて、落ち着いた画面に切り替える
+          overlay.style.backgroundColor = "rgba(20, 20, 40, 0.75)";
+          phase1.style.display = "none";
+          phase2.style.display = "block";
+        }, 2500);
+      })();
+    </script>
+  </body>
+</html>
