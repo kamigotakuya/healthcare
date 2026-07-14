@@ -43,68 +43,213 @@
 
       <div class="card">
         <div class="card-content">
-          <h3>札幌市の現在の天気</h3>
+          <!-- プルダウンメニュー -->
+          <div style="margin-bottom: 20px">
+            <label
+              for="city-select"
+              style="font-weight: bold; margin-right: 10px; color: #333"
+              >地域を選択:</label
+            >
+            <select
+              id="city-select"
+              style="
+                padding: 8px;
+                font-size: 16px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+                background-color: #fff;
+              "
+            >
+              <option value="43.0667,141.3500">札幌市</option>
+              <option value="35.6895,139.6917">東京都</option>
+              <option value="34.6937,135.5023">大阪市</option>
+              <option value="33.5902,130.4017">福岡市</option>
+              <option value="26.2124,127.6809">那覇市</option>
+            </select>
+          </div>
 
-          <!-- 天気表示部分 -->
+          <!-- タイトルを動的に変更できるようにidを付与 -->
+          <h3
+            id="city-title"
+            style="
+              margin-top: 0;
+              border-bottom: 1px solid #eee;
+              padding-bottom: 10px;
+            "
+          >
+            札幌市の現在の天気
+          </h3>
+
+          <!-- 現在の天気表示部分 -->
           <div
             style="
               display: flex;
-              gap: 30px;
+              gap: 20px;
               align-items: center;
               margin-top: 15px;
-              margin-bottom: 30px;
             "
           >
-            <span id="weather-desc" style="font-size: 16px; color: #555"
-              >読み込み中...</span
-            >
-            <span
-              id="weather-temp"
-              style="font-size: 28px; font-weight: bold; color: #007bff"
-              >--°C</span
-            >
+            <span id="current-icon" style="font-size: 50px">⏳</span>
+            <div>
+              <div
+                id="current-desc"
+                style="font-size: 18px; font-weight: bold; color: #333"
+              >
+                読み込み中...
+              </div>
+              <div style="display: flex; gap: 15px; margin-top: 5px">
+                <span
+                  id="current-temp"
+                  style="font-size: 24px; font-weight: bold; color: #007bff"
+                  >--°C</span
+                >
+                <span
+                  id="current-wind"
+                  style="
+                    font-size: 14px;
+                    color: #666;
+                    display: flex;
+                    align-items: center;
+                  "
+                  >風速: -- m/s</span
+                >
+              </div>
+            </div>
           </div>
 
-          <!-- 戻るボタン（他のメニューと同じリストスタイルを適用） -->
+          <!-- 3日間予報表示部分 -->
+          <h3
+            style="
+              margin-top: 30px;
+              border-bottom: 1px solid #eee;
+              padding-bottom: 10px;
+            "
+          >
+            3日間の天気予報
+          </h3>
+          <ul
+            id="forecast-list"
+            style="list-style: none; padding: 0; margin-bottom: 30px"
+          >
+            <li style="color: #666">読み込み中...</li>
+          </ul>
+
+          <!-- 戻るボタン -->
           <ul>
             <li><a href="#" th:href="@{/}">ダッシュボードに戻る</a></li>
           </ul>
         </div>
       </div>
-      <!-- .card -->
     </main>
 
     <footer>&copy; 20xx HealthCare.com</footer>
 
-    <!-- 天気予報を取得するJavaScript -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        const lat = 43.0667;
-        const lon = 141.35;
+        // 天気コードをアイコンと日本語に変換する共通関数（バグ修正済み）
+        function getWeatherInfo(code) {
+          let desc = "晴れ";
+          let icon = "☀️";
+          if (code === 0) {
+            desc = "快晴";
+            icon = "☀️";
+          } else if (code >= 1 && code <= 3) {
+            desc = "曇り";
+            icon = "☁️";
+          } else if (code >= 45 && code <= 48) {
+            desc = "霧";
+            icon = "🌫️";
+          } else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) {
+            desc = "雨";
+            icon = "☔";
+          } else if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) {
+            desc = "雪";
+            icon = "⛄";
+          } else if (code >= 95) {
+            desc = "雷雨";
+            icon = "⚡";
+          }
+          return { desc, icon };
+        }
 
-        fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=Asia%2FTokyo`,
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            const weather = data.current_weather;
-            const code = weather.weathercode;
+        // 天気を取得して画面を描画する関数
+        function fetchWeather(lat, lon, cityName) {
+          // タイトルを選択された都市名に変更
+          document.getElementById("city-title").innerText =
+            `${cityName}の現在の天気`;
 
-            let desc = "晴れ";
-            if (code >= 1 && code <= 3) desc = "曇り";
-            else if (code >= 45 && code <= 48) desc = "霧";
-            else if (code >= 51 && code <= 67) desc = "雨";
-            else if (code >= 71 && code <= 82) desc = "雪";
-            else if (code >= 95) desc = "雷雨";
+          const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo`;
 
-            document.getElementById("weather-desc").innerText = desc;
-            document.getElementById("weather-temp").innerText =
-              weather.temperature + "°C";
-          })
-          .catch((error) => {
-            console.error("天気の取得に失敗しました:", error);
-            document.getElementById("weather-desc").innerText = "取得エラー";
-          });
+          fetch(apiUrl)
+            .then((response) => response.json())
+            .then((data) => {
+              // 現在の天気を更新
+              const current = data.current_weather;
+              const currentInfo = getWeatherInfo(current.weathercode);
+              const windSpeedMS =
+                Math.round((current.windspeed * 10) / 36) / 10;
+
+              document.getElementById("current-icon").innerText =
+                currentInfo.icon;
+              document.getElementById("current-desc").innerText =
+                currentInfo.desc;
+              document.getElementById("current-temp").innerText =
+                current.temperature + "°C";
+              document.getElementById("current-wind").innerText =
+                `風速: ${windSpeedMS} m/s`;
+
+              // 3日間の予報を更新
+              const daily = data.daily;
+              let forecastHTML = "";
+
+              for (let i = 0; i < 3; i++) {
+                const dateObj = new Date(daily.time[i]);
+                const month = dateObj.getMonth() + 1;
+                const day = dateObj.getDate();
+                let dayLabel = `${month}/${day}`;
+                if (i === 0) dayLabel += " (今日)";
+                else if (i === 1) dayLabel += " (明日)";
+                else if (i === 2) dayLabel += " (明後日)";
+
+                const info = getWeatherInfo(daily.weathercode[i]);
+                const maxTemp = Math.round(daily.temperature_2m_max[i]);
+                const minTemp = Math.round(daily.temperature_2m_min[i]);
+
+                forecastHTML += `
+                      <li style="display: flex; justify-content: space-between; align-items: center; padding: 12px 10px; border-bottom: 1px dashed #ccc;">
+                        <span style="width: 120px; font-weight: bold; color: #555;">${dayLabel}</span>
+                        <span style="font-size: 24px;" title="${info.desc}">${info.icon}</span>
+                        <span style="width: 80px; text-align: right; font-size: 16px;">
+                          <span style="color: #dc3545; font-weight: bold;">${maxTemp}°</span> /
+                          <span style="color: #007bff; font-weight: bold;">${minTemp}°</span>
+                        </span>
+                      </li>
+                    `;
+              }
+              document.getElementById("forecast-list").innerHTML = forecastHTML;
+            })
+            .catch((error) => {
+              console.error("天気の取得に失敗しました:", error);
+              document.getElementById("current-desc").innerText = "取得エラー";
+              document.getElementById("forecast-list").innerHTML =
+                '<li style="color: red;">データの読み込みに失敗しました</li>';
+            });
+        }
+
+        // プルダウンが変更された時の処理
+        const citySelect = document.getElementById("city-select");
+        citySelect.addEventListener("change", function () {
+          // 選択されたoptionの値（緯度,経度）を取得して分割
+          const [lat, lon] = this.value.split(",");
+          // 選択された都市名（札幌市、東京都など）を取得
+          const cityName = this.options[this.selectedIndex].text;
+
+          // 取得した緯度・経度・都市名で天気取得関数を呼び出す
+          fetchWeather(lat, lon, cityName);
+        });
+
+        // ページ読み込み時に初期値（札幌市）で天気を取得
+        fetchWeather(43.0667, 141.35, "札幌市");
       });
     </script>
   </body>
