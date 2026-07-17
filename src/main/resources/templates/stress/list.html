@@ -1,0 +1,293 @@
+
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HealthCare.com</title>
+    <link
+      rel="icon"
+      th:href="@{/img/common/favicon.ico}"
+      href="../../static/img/common/favicon.ico"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css" />
+  </head>
+
+  <body>
+    <header>
+      <a href="#" th:href="@{/}"
+        ><img
+          class="header-logo"
+          th:src="@{/img/common/healthcare.png}"
+          src="../../static/img/common/healthcare.png"
+        /><strong>HealthCare.com</strong></a
+      >
+      <a href="#" th:href="@{/logout}"
+        ><img th:src="@{/img/common/exit.svg}" src="../../static/img/common/exit.svg" />ログアウト
+      </a>
+    </header>
+    <main>
+      <h1 class="page-title">ストレスチェック</h1>
+      <p class="error-message" th:if="${errorMessage}" th:text="${errorMessage}">
+        エラーメッセージ
+      </p>
+
+      <!-- 入力フォーム -->
+      <div class="card">
+        <div class="card-content">
+          <h2>この2週間について、あてはまるものを選んでください</h2>
+          <p style="font-size: 13px; color: var(--gray-color)">
+            1：ほとんどない　2：ときどきある　3：しばしばある　4：いつもある
+          </p>
+          <form method="post" th:action="@{/stress/calculate}">
+            <div class="stress-question">
+              <p class="stress-question-text">1. よく眠れないことがある</p>
+              <div class="stress-scale">
+                <label
+                  ><input type="radio" name="q1" value="1" th:checked="${stressInputData.q1 == '1'}" />1</label
+                >
+                <label
+                  ><input type="radio" name="q1" value="2" th:checked="${stressInputData.q1 == '2'}" />2</label
+                >
+                <label
+                  ><input type="radio" name="q1" value="3" th:checked="${stressInputData.q1 == '3'}" />3</label
+                >
+                <label
+                  ><input type="radio" name="q1" value="4" th:checked="${stressInputData.q1 == '4'}" />4</label
+                >
+              </div>
+            </div>
+
+            <div class="stress-question">
+              <p class="stress-question-text">2. イライラすることが多い</p>
+              <div class="stress-scale">
+                <label
+                  ><input type="radio" name="q2" value="1" th:checked="${stressInputData.q2 == '1'}" />1</label
+                >
+                <label
+                  ><input type="radio" name="q2" value="2" th:checked="${stressInputData.q2 == '2'}" />2</label
+                >
+                <label
+                  ><input type="radio" name="q2" value="3" th:checked="${stressInputData.q2 == '3'}" />3</label
+                >
+                <label
+                  ><input type="radio" name="q2" value="4" th:checked="${stressInputData.q2 == '4'}" />4</label
+                >
+              </div>
+            </div>
+
+            <div class="stress-question">
+              <p class="stress-question-text">3. 食欲不振や過食がある</p>
+              <div class="stress-scale">
+                <label
+                  ><input type="radio" name="q3" value="1" th:checked="${stressInputData.q3 == '1'}" />1</label
+                >
+                <label
+                  ><input type="radio" name="q3" value="2" th:checked="${stressInputData.q3 == '2'}" />2</label
+                >
+                <label
+                  ><input type="radio" name="q3" value="3" th:checked="${stressInputData.q3 == '3'}" />3</label
+                >
+                <label
+                  ><input type="radio" name="q3" value="4" th:checked="${stressInputData.q3 == '4'}" />4</label
+                >
+              </div>
+            </div>
+
+            <div class="stress-question">
+              <p class="stress-question-text">4. 集中力が続かない</p>
+              <div class="stress-scale">
+                <label
+                  ><input type="radio" name="q4" value="1" th:checked="${stressInputData.q4 == '1'}" />1</label
+                >
+                <label
+                  ><input type="radio" name="q4" value="2" th:checked="${stressInputData.q4 == '2'}" />2</label
+                >
+                <label
+                  ><input type="radio" name="q4" value="3" th:checked="${stressInputData.q4 == '3'}" />3</label
+                >
+                <label
+                  ><input type="radio" name="q4" value="4" th:checked="${stressInputData.q4 == '4'}" />4</label
+                >
+              </div>
+            </div>
+
+            <div class="stress-question">
+              <p class="stress-question-text">5. 疲れがとれない</p>
+              <div class="stress-scale">
+                <label
+                  ><input type="radio" name="q5" value="1" th:checked="${stressInputData.q5 == '1'}" />1</label
+                >
+                <label
+                  ><input type="radio" name="q5" value="2" th:checked="${stressInputData.q5 == '2'}" />2</label
+                >
+                <label
+                  ><input type="radio" name="q5" value="3" th:checked="${stressInputData.q5 == '3'}" />3</label
+                >
+                <label
+                  ><input type="radio" name="q5" value="4" th:checked="${stressInputData.q5 == '4'}" />4</label
+                >
+              </div>
+            </div>
+
+            <div class="stress-question">
+              <p class="stress-question-text">6. 頭痛や肩こりを感じる</p>
+              <div class="stress-scale">
+                <label
+                  ><input type="radio" name="q6" value="1" th:checked="${stressInputData.q6 == '1'}" />1</label
+                >
+                <label
+                  ><input type="radio" name="q6" value="2" th:checked="${stressInputData.q6 == '2'}" />2</label
+                >
+                <label
+                  ><input type="radio" name="q6" value="3" th:checked="${stressInputData.q6 == '3'}" />3</label
+                >
+                <label
+                  ><input type="radio" name="q6" value="4" th:checked="${stressInputData.q6 == '4'}" />4</label
+                >
+              </div>
+            </div>
+
+            <div class="stress-question">
+              <p class="stress-question-text">7. 些細なことで落ち込む</p>
+              <div class="stress-scale">
+                <label
+                  ><input type="radio" name="q7" value="1" th:checked="${stressInputData.q7 == '1'}" />1</label
+                >
+                <label
+                  ><input type="radio" name="q7" value="2" th:checked="${stressInputData.q7 == '2'}" />2</label
+                >
+                <label
+                  ><input type="radio" name="q7" value="3" th:checked="${stressInputData.q7 == '3'}" />3</label
+                >
+                <label
+                  ><input type="radio" name="q7" value="4" th:checked="${stressInputData.q7 == '4'}" />4</label
+                >
+              </div>
+            </div>
+
+            <div class="stress-question">
+              <p class="stress-question-text">8. 仕事や勉強へのやる気が出ない</p>
+              <div class="stress-scale">
+                <label
+                  ><input type="radio" name="q8" value="1" th:checked="${stressInputData.q8 == '1'}" />1</label
+                >
+                <label
+                  ><input type="radio" name="q8" value="2" th:checked="${stressInputData.q8 == '2'}" />2</label
+                >
+                <label
+                  ><input type="radio" name="q8" value="3" th:checked="${stressInputData.q8 == '3'}" />3</label
+                >
+                <label
+                  ><input type="radio" name="q8" value="4" th:checked="${stressInputData.q8 == '4'}" />4</label
+                >
+              </div>
+            </div>
+
+            <div class="stress-question">
+              <p class="stress-question-text">9. 人と話すのが億劫に感じる</p>
+              <div class="stress-scale">
+                <label
+                  ><input type="radio" name="q9" value="1" th:checked="${stressInputData.q9 == '1'}" />1</label
+                >
+                <label
+                  ><input type="radio" name="q9" value="2" th:checked="${stressInputData.q9 == '2'}" />2</label
+                >
+                <label
+                  ><input type="radio" name="q9" value="3" th:checked="${stressInputData.q9 == '3'}" />3</label
+                >
+                <label
+                  ><input type="radio" name="q9" value="4" th:checked="${stressInputData.q9 == '4'}" />4</label
+                >
+              </div>
+            </div>
+
+            <div class="stress-question">
+              <p class="stress-question-text">10. 将来に対して不安を感じる</p>
+              <div class="stress-scale">
+                <label
+                  ><input
+                    type="radio"
+                    name="q10"
+                    value="1"
+                    th:checked="${stressInputData.q10 == '1'}"
+                  />1</label
+                >
+                <label
+                  ><input
+                    type="radio"
+                    name="q10"
+                    value="2"
+                    th:checked="${stressInputData.q10 == '2'}"
+                  />2</label
+                >
+                <label
+                  ><input
+                    type="radio"
+                    name="q10"
+                    value="3"
+                    th:checked="${stressInputData.q10 == '3'}"
+                  />3</label
+                >
+                <label
+                  ><input
+                    type="radio"
+                    name="q10"
+                    value="4"
+                    th:checked="${stressInputData.q10 == '4'}"
+                  />4</label
+                >
+              </div>
+            </div>
+
+            <button class="bg-warning" type="submit">チェックする</button>
+          </form>
+        </div>
+      </div>
+      <!-- .card -->
+
+      <!-- チェック結果 -->
+      <div class="card" id="stressResultCard" th:if="${stressResultEntity != null}">
+        <div class="card-content">
+          <h2>チェック結果</h2>
+          <div class="stress-result-summary">
+            <p class="stress-result-score">
+              合計 <span th:text="${stressResultEntity.totalScore}">20</span> / 40 点
+            </p>
+            <p
+              class="stress-result-badge"
+              th:classappend="${stressResultEntity.levelClass}"
+              th:text="${stressResultEntity.levelLabel}"
+            >
+              ストレスは低めです
+            </p>
+          </div>
+          <p class="mt-10" th:text="${stressResultEntity.adviceMessage}">アドバイス</p>
+          <p class="mt-10" style="font-size: 12px; color: var(--gray-color)">
+            ※本結果は健康啓発を目的とした簡易セルフチェックです。医学的な診断ではありません。強いストレスが続く場合は、医療機関や専門の相談窓口へのご相談をおすすめします。
+          </p>
+        </div>
+      </div>
+      <!-- .card -->
+    </main>
+    <footer>&copy; 2026 HealthCare.com</footer>
+
+    <!--
+      チェックするボタン押下後、画面上部から結果までスクロールする手間をなくすため、
+      結果が表示されている場合のみ、結果カードまで自動でスクロールします。
+    -->
+    <script th:if="${stressResultEntity != null}">
+      (function () {
+        var resultCard = document.getElementById("stressResultCard");
+        if (resultCard) {
+          resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      })();
+    </script>
+  </body>
+</html>
